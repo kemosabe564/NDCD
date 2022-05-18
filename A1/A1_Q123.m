@@ -61,7 +61,7 @@ clear temp
 
 NCS_small_delay.Fx = expm(NCS.A * NCS.h);
 
-temp = expm(NCS.A * s)
+temp = expm(NCS.A * s);
 
 NCS_small_delay.Fu = int(temp, s, h-tau, h) * NCS.B;
 NCS_small_delay.G1 = int(temp, s, 0, h-tau) * NCS.B;
