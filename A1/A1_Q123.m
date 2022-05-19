@@ -14,19 +14,19 @@ NCS.B = [0; 1];
 
 NCS.nx = 2;
 
-%% Q1.1
+% Q1.1
 % i = 1.8;
 % q = 0.8;
-i = 1.0;
-q = 1.0;
-NCS.poles = [-i+q*i -i-q*i];
+a1 = 1.0;
+b1 = 1.0;
+NCS.poles = [-a1+b1*i -a1-b1*i];
 
 NCS.K = place(NCS.A, NCS.B, NCS.poles)
 eig(NCS.A - NCS.B * NCS.K)
 
-clear ans i q
+clear ans a1 b1
 
-%% Q1.2
+% Q1.2
 syms h tau s
 NCS.h = h; NCS.tau = tau;
 
@@ -52,7 +52,7 @@ max(double(abs(temp)))
 
 clear temp
 
-%% Q2.1
+% Q2.1
 % NCS_small_delay.G1 = (expm(NCS.A * (NCS.h - NCS.tau)) - eye(NCS.nx)) / NCS.A * NCS.B;
 % 
 % temp = (NCS_no_delay.F - eye(NCS.nx)) / NCS.A * NCS.B;
@@ -93,8 +93,8 @@ max(double(abs(temp)))
 
 clear temp
 
-%% Q2.2
-h_samples = [0 : 0.05 : 1.4];
+% Q2.2
+h_samples = [0 : 0.025 : 1.0];
 % around 2.2 is unstable
 tau_samples = [0 : h_samples(end)/10 : 0.8*h_samples(end)];
 results = zeros([1, (length(h_samples)*length(tau_samples))]);
@@ -140,7 +140,7 @@ clear h_samples tau_samples
 clear plot_h plot_tau results
 
 
-%% Q2.3
+% Q2.3
 % we choose h = 1.4
 h_sample = 0.8; 
 tau_sample = [0 : h_sample/40 : h_sample];
@@ -158,20 +158,20 @@ grid on
 hold on
 plot(tau_sample, ones(1, length(tau_sample)), 'r--', 'LineWidth', 2)
 xlabel("time delay tau", 'FontSize', 16); 
-ylabel("eigenvalues of F_{cl}(1.4, \tau)", 'FontSize', 16);
-title("Variation of eigenvalues (with h = 1.4)", 'FontSize', 16)
+ylabel("eigenvalues of F_{cl}(0.8, \tau)", 'FontSize', 16);
+title("Variation of eigenvalues (with h = 0.8)", 'FontSize', 16)
 legend({'eigenvalue 1', 'eigenvalue 2', 'eigenvalue 3'}, 'Location', 'northwest')
 
 clear i 
 
 % we retune the K
-i = 1.9;
-q = 0.8;
-NCS.poles = [-i+q*i -i-q*i];
+a1 = 1.0;
+b1 = 1.3;
+% NCS.poles = [-a+b*a -a-b*a];
+NCS.poles = [-a1+b1*i -a1-b1*i];
+NCS.K = place(NCS.A, NCS.B, NCS.poles);
 
-NCS.K = place(NCS.A, NCS.B, NCS.poles)
-
-K = [NCS.K 0.3];
+K = [NCS.K 0.85];
 
 NCS_small_delay.A_retune = NCS_small_delay.F - NCS_small_delay.G * K;
 NCS_small_delay.A_eig_retune = eig(NCS_small_delay.A_retune);
@@ -187,27 +187,27 @@ grid on
 hold on
 plot(tau_sample, ones(1, length(tau_sample)), 'r--', 'LineWidth', 2)
 xlabel("time delay tau", 'FontSize', 16); 
-ylabel("eigenvalues of F_{cl}(1.4, \tau)", 'FontSize', 16);
-title("Variation of eigenvalues (with h = 1.4)", 'FontSize', 16)
+ylabel("eigenvalues of F_{cl}(0.8, \tau)", 'FontSize', 16);
+title("Variation of eigenvalues (with h = 0.8)", 'FontSize', 16)
 legend({'eigenvalue 1', 'eigenvalue 2', 'eigenvalue 3'}, 'Location', 'northwest')
 
 
-clear i tau_sample h_sample
+clear i tau_sample h_sample a b
 
 
-%% Q3.1
+% Q3.1
 NCS_large_delay.Fx = expm(NCS.A * NCS.h);
 
 temp = expm(NCS.A*s);
 
-NCS_large_delay.Fu2 = int(temp, s, NCS.tau-2*NCS.h, NCS.tau) * NCS.B;
+NCS_large_delay.Fu2 = int(temp, s, NCS.tau-2*NCS.h, NCS.h) * NCS.B;
 NCS_large_delay.Fu3 = int(temp, s, 0, NCS.tau-2*NCS.h) * NCS.B;
 
 NCS_large_delay.F=[NCS_large_delay.Fx, zeros(2,1), NCS_large_delay.Fu2, NCS_large_delay.Fu3;
                    0, 0, 0, 0, 0;
                    0, 0, 1, 0, 0;
                    0, 0, 0, 1, 0];
-NCS_large_delay.G = [0; 0; 0; 1; 0];
+NCS_large_delay.G = [0; 0; 1; 0; 0];
 
 NCS_large_delay.A = NCS_large_delay.F - NCS_large_delay.G * [NCS.K 0 0 0];
 
@@ -226,16 +226,16 @@ max(double(abs(temp)))
 
 clear temp
 
-%% Q3.2
+% Q3.2
 
 % i = 1.9;
 % q = 0.8;
-i = 1.0;
-q = 1.0;
-NCS.poles = [-i+q*i -i-q*i];
-NCS.K = place(NCS.A, NCS.B, NCS.poles)
+a1 = 1.0;
+b1 = 1.0;
+NCS.poles = [-a1+b1*i -a1-b1*i];
+NCS.K = place(NCS.A, NCS.B, NCS.poles);
 
-h_samples = [0 : 0.05 : 0.4];
+h_samples = [0 : 0.01 : 0.3];
 % around 2.2 is unstable
 tau_samples = [0 : h_samples(end)/10 : 0.8*h_samples(end)];
 results = zeros([1, (length(h_samples)*length(tau_samples))]);
@@ -280,9 +280,9 @@ clear h_samples tau_samples
 
 clear plot_h plot_tau results
 
-%% Q3.3
+% Q3.3
 % we choose h = 0.2
-h_sample = 0.2; 
+h_sample = 0.17; 
 tau_sample = [2*h_sample : h_sample/20 : 3*h_sample];
 rho = zeros(5, length(tau_sample));
 rho1 = zeros(5, length(tau_sample));
@@ -299,20 +299,20 @@ hold on
 plot(tau_sample, ones(1, length(tau_sample)), 'r--', 'LineWidth', 2)
 % xlim([0.4, 0.7]);
 xlabel("time delay tau", 'FontSize', 16); 
-ylabel("eigenvalues of F_{cl}(1.4, \tau)", 'FontSize', 16);
-title("Variation of eigenvalues (with h = 1.4)", 'FontSize', 16)
+ylabel("eigenvalues of F_{cl}(0.17, \tau)", 'FontSize', 16);
+title("Variation of eigenvalues (with h = 0.17)", 'FontSize', 16)
 legend({'eigenvalue of x_1', 'eigenvalue of x_2', 'eigenvalue of u_{k+1}', 'eigenvalue of u_{k+2}', 'eigenvalue of u_{k+3}'}, 'Location', 'southeast')
 
 clear i 
 
 % we retune the K
-i = 1.0;
-q = 1.0;
-NCS.poles = [-i+q*i -i-q*i];
+a1 = 1.0;
+b1 = 1.0;
+NCS.poles = [-a1+b1*i -a1-b1*i];
 
-NCS.K = place(NCS.A, NCS.B, NCS.poles)
+NCS.K = place(NCS.A, NCS.B, NCS.poles);
 
-K = [NCS.K 0.25 0.25 0.25];
+K = [NCS.K 0.5 0.5 0.5];
 
 NCS_large_delay.A_retune = NCS_large_delay.F - NCS_large_delay.G * K;
 NCS_large_delay.A_eig_retune = eig(NCS_large_delay.A_retune);
@@ -328,12 +328,12 @@ grid on
 hold on
 plot(tau_sample, ones(1, length(tau_sample)), 'r--', 'LineWidth', 2)
 xlabel("time delay tau", 'FontSize', 16); 
-ylabel("eigenvalues of F_{cl}(1.4, \tau)", 'FontSize', 16);
-title("Variation of eigenvalues (with h = 1.4)", 'FontSize', 16)
+ylabel("eigenvalues of F_{cl}(0.17, \tau)", 'FontSize', 16);
+title("Variation of eigenvalues (with h = 0.17)", 'FontSize', 16)
 legend({'eigenvalue of x_1', 'eigenvalue of x_2', 'eigenvalue of u_{k+1}', 'eigenvalue of u_{k+2}', 'eigenvalue of u_{k+3}'}, 'Location', 'southeast')
 
 
-clear i q
+clear a1 b1
 
 % clear tau_sample h_sample
 
