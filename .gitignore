@@ -4,11 +4,11 @@
 # # no ignore folder
 # !*/
 
-# # then do not ignore the followings
-# !*.m
-# !*.p
-# !*.mlx
-# !*.slx
-# !*.pdf
-# !*.zip
-# !*.ipr
+# then do not ignore the followings
+!*.m
+!*.p
+!*.mlx
+!*.slx
+!*.pdf
+!*.zip
+!*.ipr
