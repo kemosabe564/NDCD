@@ -1,8 +1,8 @@
-# # first ignore all files
-# *
+# first ignore all files
+*
 
-# # no ignore folder
-# !*/
+# no ignore folder
+!*/
 
 # then do not ignore the followings
 !*.m
