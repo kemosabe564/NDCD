@@ -12,3 +12,4 @@
 !*.pdf
 !*.zip
 !*.ipr
+!*.gitignore
