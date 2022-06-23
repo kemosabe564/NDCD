@@ -28,10 +28,10 @@ P1 = []; P2 = []; P3 = []; P4 = [];
 
 Q1 = []; Q2 = []; Q3 = []; Q4 = [];
 
-final_transfer_1 = [];
-final_transfer_2 = [];
-final_transfer_3 = [];
-final_transfer_4 = [];
+matrix_1 = [];
+matrix_2 = [];
+matrix_3 = [];
+matrix_4 = [];
 
 for i = 1:1:Tfinal
 
@@ -57,10 +57,10 @@ for i = 1:1:Tfinal
 
     if (i == Tfinal)
     
-        final_transfer_1 = temp_matrix_1;       
-        final_transfer_2 = temp_matrix_2;      
-        final_transfer_3 = temp_matrix_3;      
-        final_transfer_4 = temp_matrix_4;
+        matrix_1 = temp_matrix_1;       
+        matrix_2 = temp_matrix_2;      
+        matrix_3 = temp_matrix_3;      
+        matrix_4 = temp_matrix_4;
 
         P1 = [P1; zeros(size(temp_matrix_1, 1), size(P1, 2))];
         P2 = [P2; zeros(size(temp_matrix_2, 1), size(P2, 2))];
@@ -105,13 +105,13 @@ aircraft_2.Q = Q2;
 aircraft_3.Q = Q3;
 aircraft_4.Q = Q4;
 
-aircraft_1.final_transfer = final_transfer_1;
-aircraft_2.final_transfer = final_transfer_2;
-aircraft_3.final_transfer = final_transfer_3;
-aircraft_4.final_transfer = final_transfer_4;
+aircraft_1.matrix = matrix_1;
+aircraft_2.matrix = matrix_2;
+aircraft_3.matrix = matrix_3;
+aircraft_4.matrix = matrix_4;
 
 clear i j
 clear input_max
 clear temp_matrix_1 temp_matrix_2 temp_matrix_3 temp_matrix_4
-clear final_transfer_1 final_transfer_2 final_transfer_3 final_transfer_4
+clear matrix_1 matrix_2 matrix_3 matrix_4
 clear P1 P2 P3 P4 Q1 Q2 Q3 Q4 

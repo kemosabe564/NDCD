@@ -1,4 +1,6 @@
-
+%%%%%
+%%% p2a
+%%%%%
 ADMM_2a.lambda = ones(4, 4);
 
 ADMM_2a.centralized_result = cvx_optval;
@@ -15,10 +17,10 @@ aircraft_4.rho = 1;
 
 ADMM_2a.terminal = ones(4, 1);
 
-aircraft_1.history_objective_error = [];
-aircraft_2.history_objective_error = [];
-aircraft_3.history_objective_error = [];
-aircraft_4.history_objective_error = [];
+aircraft_1.sub_error = [];
+aircraft_2.sub_error = [];
+aircraft_3.sub_error = [];
+aircraft_4.sub_error = [];
 
 while(ADMM_2a.error > 0.01)
 
@@ -47,27 +49,22 @@ while(ADMM_2a.error > 0.01)
     aircraft_1.decentralized_result = (aircraft_1.P * aircraft_1.u + aircraft_1.Q * x01)' * (aircraft_1.P * aircraft_1.u + aircraft_1.Q * x01)...,
                                      + aircraft_1.u' * aircraft_1.u + x01' * x01;
     aircraft_1.error = abs(aircraft_1.decentralized_result-aircraft_1.centralized_result) / aircraft_1.centralized_result;
-    aircraft_1.history_objective_error = [aircraft_1.history_objective_error, aircraft_1.error];
+    aircraft_1.sub_error = [aircraft_1.sub_error, aircraft_1.error];
 
     aircraft_2.decentralized_result = (aircraft_2.P * aircraft_2.u + aircraft_2.Q * x02)' * (aircraft_2.P * aircraft_2.u + aircraft_2.Q * x02)...,
                                      + aircraft_2.u' * aircraft_2.u + x02' * x02;
     aircraft_2.error = abs(aircraft_2.decentralized_result-aircraft_2.centralized_result) / aircraft_2.centralized_result;
-    aircraft_2.history_objective_error = [aircraft_2.history_objective_error, aircraft_2.error];
+    aircraft_2.sub_error = [aircraft_2.sub_error, aircraft_2.error];
 
     aircraft_3.decentralized_result = (aircraft_3.P * aircraft_3.u + aircraft_3.Q * x03)' * (aircraft_3.P * aircraft_3.u + aircraft_3.Q * x03)...,
                                      + aircraft_3.u' * aircraft_3.u + x03' * x03;
     aircraft_3.error = abs(aircraft_3.decentralized_result-aircraft_3.centralized_result) / aircraft_3.centralized_result;
-    aircraft_3.history_objective_error = [aircraft_3.history_objective_error, aircraft_3.error];
+    aircraft_3.sub_error = [aircraft_3.sub_error, aircraft_3.error];
 
     aircraft_4.decentralized_result = (aircraft_4.P * aircraft_4.u + aircraft_4.Q * x04)' * (aircraft_4.P * aircraft_4.u + aircraft_4.Q * x04)...,
                                      + aircraft_4.u' * aircraft_4.u + x04' * x04;
     aircraft_4.error = abs(aircraft_4.decentralized_result-aircraft_4.centralized_result) / aircraft_4.centralized_result;
-    aircraft_4.history_objective_error = [aircraft_4.history_objective_error, aircraft_4.error];
-
-    % dual_part = ADMM_master.lambda(1, :) * (aircraft_1.distributed_final_state-aircraft_2.distributed_final_state)...,
-    %             + ADMM_master.lambda(2, :) * (aircraft_2.distributed_final_state-aircraft_3.distributed_final_state)...,
-    %             + ADMM_master.lambda(3, :) * (aircraft_3.distributed_final_state-aircraft_4.distributed_final_state)..., 
-    %             + ADMM_master.lambda(4, :) * (aircraft_4.distributed_final_state-aircraft_1.distributed_final_state);
+    aircraft_4.sub_error = [aircraft_4.sub_error, aircraft_4.error];
 
     dual_part = 0;
 
@@ -129,13 +126,13 @@ grid on
 
 figure('Name', 'aircraft error evolution')
 
-semilogy(aircraft_1.history_objective_error);
+semilogy(aircraft_1.sub_error);
 hold on
-semilogy(aircraft_2.history_objective_error);
+semilogy(aircraft_2.sub_error);
 hold on
-semilogy(aircraft_3.history_objective_error);
+semilogy(aircraft_3.sub_error);
 hold on
-semilogy(aircraft_4.history_objective_error);
+semilogy(aircraft_4.sub_error);
 legend('aircraft 1', 'aircraft 2', 'aircraft 3', 'aircraft 4');
 grid on
 
